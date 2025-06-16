@@ -10,7 +10,7 @@ parameters {
 }
 model {
   // Priors
-  beta0 ~ normal(80, 30);
+  beta0 ~ normal(65, 15);
   beta ~ normal(0, 10);
   sigma ~ student_t(3, 0, 5);
 }
