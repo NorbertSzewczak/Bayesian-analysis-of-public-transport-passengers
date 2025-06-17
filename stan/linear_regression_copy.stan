@@ -12,7 +12,7 @@ model {
   // Priors
   beta0 ~ normal(0, 0.5);
   beta ~ normal(0, 0.2);
-  sigma ~ student_t(4,0,1);
+  sigma ~ exponential(0.5);;
 }
 generated quantities {
   vector[N] y;             // Generated target variable

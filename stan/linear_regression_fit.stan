@@ -1,28 +1,31 @@
 data {
-  int<lower=0> N;          // Number of training samples
-  int<lower=0> K;          // Number of features
-  matrix[N, K] X;          // Feature matrix
-  vector[N] y;             // Target variable
-  int<lower=0> N_new;      // Number of test samples
-  matrix[N_new, K] X_new;  // Test feature matrix
+  int<lower=0> N;          // Liczba próbek treningowych
+  int<lower=0> K;          // Liczba cech
+  matrix[N, K] X;          // Macierz cech
+  vector[N] y;             // Zmienna celu
 }
 parameters {
-  vector[K] beta;          // Regression coefficients
-  real beta0;              // Intercept
-  real<lower=0> sigma;     // Noise standard deviation
+  vector[K] beta;          
+  real beta0;              
+  real<lower=0> sigma;     
 }
 model {
-  // Priors
-  beta0 ~ normal(50, 20);
-  beta ~ normal(0, 5);
-  sigma ~ student_t(3, 0, 10);
+  // Priory
+  beta0 ~ normal(0, 0.5);
+  beta ~ normal(0, 0.2);
+  sigma ~ student_t(4,0,1);
 
   // Likelihood
   y ~ normal(X * beta + beta0, sigma);
 }
 generated quantities {
-  vector[N_new] y_pred;    // Predictions for test data
-  for (n in 1:N_new) {
-    y_pred[n] = normal_rng(X_new[n] * beta + beta0, sigma);
+  vector[N] y_pred;                    
+  array[K] vector[N] y_per_feature;    
+
+  for (n in 1:N) {
+    y_pred[n] = normal_rng(dot_product(X[n], beta) + beta0, sigma);
+    for (k in 1:K) {
+      y_per_feature[k, n] = normal_rng(X[n, k] * beta[k] + beta0, sigma);
+    }
   }
 }
