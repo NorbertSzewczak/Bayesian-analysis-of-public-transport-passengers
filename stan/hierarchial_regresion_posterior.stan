@@ -7,7 +7,7 @@ data {
   array[num_dow_indices] int<lower=1, upper=K> dow_indices;  // Indices of day_of_week features
 }
 parameters {
-  real beta0;              // Intercept
+  real alpha;              // Intercept
   vector[K] beta;          // Feature coefficients
   real mu_dow;             // Mean of day_of_week coefficients
   real<lower=0> sigma_dow; // SD of day_of_week coefficients
@@ -16,7 +16,7 @@ parameters {
 model {
   vector[N] mu;
   // Priors
-  beta0 ~ normal(0, 0.9);
+  alpha ~ normal(0, 2.0);
   for (k in 1:K) {
     // Check if the current index k is one of the dow_indices
     int is_dow = 0; // Flag to indicate if k is a dow index
@@ -30,16 +30,16 @@ model {
     if (is_dow == 1) {
       beta[k] ~ normal(mu_dow, sigma_dow);
     } else {
-      beta[k] ~ normal(0, 1);
+      beta[k] ~ normal(0, 0.2);
     }
   }
-  mu_dow ~ normal(0, 0.3);
-  sigma_dow ~ normal(0, 0.3);
-  sigma ~ normal(0, 0.3);
+  mu_dow ~ normal(0, 0.5);
+  sigma_dow ~ normal(0, 0.5);
+  sigma ~ normal(0, 0.5);
 
   // Likelihood
   for (n in 1:N) {
-    mu[n] = beta0 + dot_product(X[n], beta);
+    mu[n] = alpha + dot_product(X[n], beta);
   }
   y ~ normal(mu, sigma);
 }
@@ -48,10 +48,10 @@ generated quantities {
   vector[N] log_lik;       // Log likelihood for model evaluation
   array[K] vector[N] y_per_feature;  // Per-feature posterior predictive
   for (n in 1:N) {
-    y_pred[n] = normal_rng(X[n] * beta + beta0, sigma);
-    log_lik[n] = normal_lpdf(y[n] | X[n] * beta + beta0, sigma);
+    y_pred[n] = normal_rng(X[n] * beta + alpha, sigma);
+    log_lik[n] = normal_lpdf(y[n] | X[n] * beta + alpha, sigma);
     for (k in 1:K) {
-      y_per_feature[k, n] = normal_rng(X[n, k] * beta[k] + beta0, sigma);
+      y_per_feature[k, n] = normal_rng(X[n, k] * beta[k] + alpha, sigma);
     }
   }
 }
