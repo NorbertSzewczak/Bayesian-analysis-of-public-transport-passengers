@@ -20,8 +20,10 @@ model {
 }
 generated quantities {
   vector[N] y_pred;                    
-
+  vector[N] log_lik;
+  
   for (n in 1:N) {
     y_pred[n] = normal_rng(dot_product(X[n], beta) + alpha, sigma);
+    log_lik[n] = normal_lpdf(y[n] | dot_product(X[n], beta) + alpha, sigma);
   }
 }

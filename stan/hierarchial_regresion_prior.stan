@@ -36,11 +36,7 @@ model {
 }
 generated quantities {
   vector[N] y_pred;             // Generated target variable
-  array[K] vector[N] y_per_feature;  // Per-feature prior predictive
   for (n in 1:N) {
     y_pred[n] = normal_rng(X[n] * beta + alpha, sigma);
-    for (k in 1:K) {
-      y_per_feature[k, n] = normal_rng(X[n, k] * beta[k] + alpha, sigma);
-    }
   }
 }

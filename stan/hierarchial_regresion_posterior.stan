@@ -46,12 +46,8 @@ model {
 generated quantities {
   vector[N] y_pred;        // Posterior predictive checks
   vector[N] log_lik;       // Log likelihood for model evaluation
-  array[K] vector[N] y_per_feature;  // Per-feature posterior predictive
   for (n in 1:N) {
     y_pred[n] = normal_rng(X[n] * beta + alpha, sigma);
     log_lik[n] = normal_lpdf(y[n] | X[n] * beta + alpha, sigma);
-    for (k in 1:K) {
-      y_per_feature[k, n] = normal_rng(X[n, k] * beta[k] + alpha, sigma);
-    }
   }
 }
