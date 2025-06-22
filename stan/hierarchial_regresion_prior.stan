@@ -13,18 +13,16 @@ parameters {
   real<lower=0> sigma;     // Noise standard deviation
 }
 model {
-  // Priors
   alpha ~ normal(0, 0.8);
   for (k in 1:K) {
-    // Check if the current index k is one of the dow_indices
-    int is_dow = 0; // Flag to indicate if k is a dow index
-    for (i in 1:size(dow_indices)) { // Iterate through dow_indices
+    int is_dow = 0;
+    for (i in 1:size(dow_indices)) {
       if (k == dow_indices[i]) {
-        is_dow = 1; // Set flag if match found
+        is_dow = 1;
       }
     }
 
-    if (is_dow == 1) { // Use the flag in the conditional
+    if (is_dow == 1) {
       beta[k] ~ normal(mu_dow, sigma_dow);
     } else {
       beta[k] ~ normal(0, 0.2);
@@ -35,7 +33,7 @@ model {
   sigma ~ normal(0, 0.5);
 }
 generated quantities {
-  vector[N] y_pred;             // Generated target variable
+  vector[N] y_pred;
   for (n in 1:N) {
     y_pred[n] = normal_rng(X[n] * beta + alpha, sigma);
   }

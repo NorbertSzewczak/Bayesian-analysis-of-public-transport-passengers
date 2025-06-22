@@ -1,7 +1,7 @@
 data {
-  int<lower=0> N;          // Liczba próbek treningowych
-  int<lower=0> K;          // Liczba cech
-  matrix[N, K] X;          // Macierz cech
+  int<lower=0> N;
+  int<lower=0> K;
+  matrix[N, K] X;
 }
 parameters {
   vector[K] beta;          // Regression coefficients

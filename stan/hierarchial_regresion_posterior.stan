@@ -15,15 +15,13 @@ parameters {
 }
 model {
   vector[N] mu;
-  // Priors
   alpha ~ normal(0, 2.0);
   for (k in 1:K) {
-    // Check if the current index k is one of the dow_indices
-    int is_dow = 0; // Flag to indicate if k is a dow index
-    for (i in 1:num_dow_indices) { // Iterate through dow_indices
+    int is_dow = 0;
+    for (i in 1:num_dow_indices) {
       if (k == dow_indices[i]) {
-        is_dow = 1; // Set flag if match found
-        break; // Exit the inner loop once a match is found
+        is_dow = 1;
+        break;
       }
     }
 

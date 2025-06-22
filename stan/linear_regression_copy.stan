@@ -15,8 +15,8 @@ model {
   sigma ~ exponential(0.5);;
 }
 generated quantities {
-  vector[N] y;             // Generated target variable
-  array[K] vector[N] y_per_feature;  // Per-feature prior predictive
+  vector[N] y;
+  array[K] vector[N] y_per_feature;
   for (n in 1:N) {
     y[n] = normal_rng(X[n] * beta + beta0, sigma);
     for (k in 1:K) {
