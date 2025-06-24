@@ -13,7 +13,7 @@ parameters {
   real<lower=0> sigma;     // Noise standard deviation
 }
 model {
-  alpha ~ normal(0, 0.8);
+  alpha ~ normal(0, 2.0);
   for (k in 1:K) {
     int is_dow = 0;
     for (i in 1:size(dow_indices)) {
@@ -29,8 +29,8 @@ model {
     }
   }
   mu_dow ~ normal(0, 0.5);
-  sigma_dow ~ cauchy(0, 0.5);
-  sigma ~ cauchy(0, 0.5);
+  sigma_dow ~ normal(0, 0.5);
+  sigma ~ normal(0, 0.5);
 }
 generated quantities {
   vector[N] y_pred;
