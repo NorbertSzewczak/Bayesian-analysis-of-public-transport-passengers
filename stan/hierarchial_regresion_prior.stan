@@ -29,8 +29,8 @@ model {
     }
   }
   mu_dow ~ normal(0, 0.5);
-  sigma_dow ~ normal(0, 0.5);
-  sigma ~ normal(0, 0.5);
+  sigma_dow ~ cauchy(0, 0.5);
+  sigma ~ cauchy(0, 0.5);
 }
 generated quantities {
   vector[N] y_pred;

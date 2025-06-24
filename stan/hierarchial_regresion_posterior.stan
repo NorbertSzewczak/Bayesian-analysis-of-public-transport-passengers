@@ -15,7 +15,7 @@ parameters {
 }
 model {
   vector[N] mu;
-  alpha ~ normal(0, 2.0);
+  alpha ~ normal(0, 0.8);
   for (k in 1:K) {
     int is_dow = 0;
     for (i in 1:num_dow_indices) {
@@ -32,8 +32,8 @@ model {
     }
   }
   mu_dow ~ normal(0, 0.5);
-  sigma_dow ~ normal(0, 0.5);
-  sigma ~ normal(0, 0.5);
+  sigma_dow ~ cauchy(0, 0.5);
+  sigma ~ cauchy(0, 0.5);
 
   // Likelihood
   for (n in 1:N) {
